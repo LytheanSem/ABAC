@@ -1,0 +1,106 @@
+fun cube(x:real) = x*x*x;
+
+fun third(L) = hd(tl(tl(L)));
+
+fun thirdChar(s) = third(explode(s));
+
+fun minMax(a,b,c) =
+         if a<b then
+             if b<c then (a,c)
+             else (* b is largest *)
+                 if a<c then (a,b) else (c,b)
+         else (* a >= b *)
+             if a<c then (b,c)
+             else (* a is largest *)
+                 if b<c then (b,a) else (c,a);
+
+fun fact(n) =
+             if n<=1 then 1 else n*fact(n-1);
+
+fun duplicate(L) =
+             if L=nil then nil else hd(L)::hd(L)::duplicate(tl(L));
+
+fun maxList(L: string list) =
+	if tl(L)=nil (* L is a single element *)
+		then hd(L) (* the single element is the maximum *)
+		else (* assume there are at least 2 elements *)
+			if hd(L)>hd(tl(L)) (* the first element
+					exceeds the second *)
+				then maxList(hd(L)::tl(tl(L))) (* eliminate
+						second element *)
+				else maxList(tl(L)) (* eliminate first
+						element *);
+
+ fun fact(1) = 1
+     |   fact(n) = n*fact(n-1);
+
+fun duplicate(nil) = nil
+     |   duplicate(x::xs) = x::x::duplicate(xs);
+
+fun maxList([x:real]) = x
+     |   maxList(x::y::zs) =
+             if x<y then maxList(y::zs)
+             else maxList(x::zs);
+
+fun square(0) = 0
+     |   square(n) = square(n-1)+2*n-1;
+
+fun flip(nil) = nil
+     |   flip((x as (a:int,b))::xs) =
+             if a<b then x::flip(xs) else (b,a)::flip(xs);
+
+fun member(_,nil) = false
+     |   member(x,y::ys) =
+             (x=y orelse member(x,ys));
+
+fun insert(x,nil) = [x]
+     |   insert(x,S as y::ys) =
+             if x=y then S else y::insert(x,ys);
+
+fun insertAll(a,nil) = nil
+     |   insertAll(a,L::Ls) = (a::L)::insertAll(a,Ls);
+
+fun powerSet(nil) = [nil]
+     |   powerSet(x::xs) =
+             powerSet(xs)@insertAll(x,powerSet(xs));
+
+fun prodDiff1(_,nil) = 1.0
+     |   prodDiff1(a,b::bs) = (a-b)*prodDiff1(a,bs);
+
+     fun prodDiff(nil) = 1.0
+     |   prodDiff(b::bs) = prodDiff1(b,bs)*prodDiff(bs);
+
+fun emptyList(nil) = true
+     |   emptyList(_) = false;
+
+ fun thousandthPower(x:real) =
+             let
+                 val x = x*x*x*x*x;
+                 val x = x*x*x*x*x;
+                 val x = x*x*x*x*x
+             in
+                 x*x*x*x*x*x*x*x
+             end;
+
+fun powerSet(nil) = [nil]
+     |   powerSet(x::xs) =
+             let
+                 val L = powerSet(xs)
+             in
+                 L @ insertAll(x,L)
+             end;
+
+ fun doubleExp(x:real,0) = x
+     |   doubleExp(x,i) =
+             let
+                 val y = doubleExp(x,i-1)
+             in
+                 y*y
+             end;
+
+fun cat(nil,M) = M
+     |   cat(x::xs,M) = x::cat(xs,M);
+
+fun polyFromRoots(nil) = [1.0]
+     |   polyFromRoots(p::ps) =
+             pmult([~p,1.0],polyFromRoots(ps));

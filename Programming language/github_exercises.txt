@@ -1,0 +1,402 @@
++ github exercises
+
+- If the list is empty (case nil), there’s nothing to do: return the empty list.
+- If the list has an item, x:
+	apply f to x
+	apply map f to the rest of the list xs
+- create a new list of the transformed item, x', and the transformed rest of the list, xs'
+		x' :: xs'
+It’s possible to pattern match directly in the function definition and avoid the intermediate values to make it less verbose, as in map'.
+
+fun map f xs =
+  case xs of
+    nil     => nil
+  | x :: xs =>
+    let val x'  = f x
+        val xs' = map f xs
+    in x' :: xs'
+    end
+
+fun map' f nil       = nil
+  | map' f (x :: xs) = f x :: map' f xs
+
+
+(*
+Consider integer sets in SML as lists of integers. Implement three functions: one that
+returns the union of two sets of integers, one that returns the intersection of two sets and
+another one which returns the set difference between them. The functions should have the
+following signature:
+
+val union = fn : int list ∗ int list −> int list
+val intersect = fn : int list ∗ int list −> int list
+val setdifference = fn : int list ∗ int list −> int list
+
+Example:
+
+− union([1,2,3],[2,3,4]);
+val it = [1,2,3,4] : int list
+− intersect([2,3,1],[4,1,7,6]);
+val it = [1] : int list
+− setdifference([3,1,7,8],[2,1,5,3]);
+val it = [7,8] : int list
+*)
+
+fun member (a, []) = false
+  | member (a, x::xls) = if a=x then true
+                          else member(a, xls);
+
+fun union ([], x) = x
+  | union (x::ls, y) = if member(x,y) then union(ls, y)
+                        else x::union(ls, y);
+
+fun intersect ([], _) = []
+  | intersect (a::lsa, lsb) = if member(a, lsb) then a::intersect(lsa, lsb)
+                              else intersect(lsa, lsb);
+fun setdifference ([]:int list, _) = []
+  | setdifference (a::lsa, lsb) = if member(a, lsb) then setdifference(lsa, lsb)
+                                  else a::setdifference(lsa, lsb);
+
+(*
+Given a sequence an we call a0 − a1 + a2 − a3 + . . . the alternating sum of 
+the sequence. Write an SML function alternating with type int list −> int that calculates
+the alternating sum of the list.
+*)
+
+fun alternating(nil) = 0
+  | alternating(a::b) = a − alternating(b);
+
+(*
+Create an SML function that given a list of strings groups all strings that are anagrams of
+each other together. Two words are called anagrams if they use the same letters the same
+amount of times.
+
+Example and function signature:
+val listAnagrams = fn : string list −> string list list
+− listAnagrams ["algorithm", "listen", "logarithm", "something", "silent", "Silent", "lentis"];
+val it = [["algorithm","logarithm"],["listen","silent","lentis"],["something"],["Silent"]] : string list list
+*)
+
+fun min [a] = a:char
+  | min (a::b::c) = if a < b then min(a::c) else min (b::c);
+
+fun sub (a,[]) = []
+  | sub (a, b::c) = if a = b then c else b::(sub (a,c));
+
+fun sublist ([],a) = a
+  | sublist (a::b, c) = sublist(b,sub(a,c));
+
+fun sort [] = []
+  | sort list = min(list)::sort(sub(min(list),list));
+
+fun anagram a b = sort(explode(a))= sort(explode(b));
+
+fun find (a,[]) = nil
+| find (a, b::c) = if anagram a b then b::(find(a,c)) else find(a,c);
+
+fun listAnagrams [] = nil
+  | listAnagrams (a::c) = let val list = a::(find(a,c))
+                        in list::(listAnagrams(sublist(list,a::c)))
+                        end;
+
+(*
+Write an SML function that removes all duplicate elements from a list. For instance
+remove_duplicates([true, true, false]) = [true, false];
+remove_duplicates([5,3,12,3,3,2]) = [5,3,12,2];
+*)
+
+fun member(a, h::t) = a=h orelse member(a, t)
+  | member(_, nil) = false;
+
+fun helper(found_already, h::t) = if member(h, found_already) then helper(found_already, t)
+                                  else h::helper(h::found_already, t)
+  | helper(_, nil) = nil;
+
+fun remove_duplicates(l) = helper(nil, l);
+
+(*
+We call the sequence of natural numbers with a0 = 0, a1 = 1, an = an−1 +
+an−2 the Fibonacci sequence. Write an SML function fib = fn : int −> int that calculates
+the nth Fibonacci number. Also, write an SML function is_fib = fn : int −> bool that,
+given a number n, calculates whether n is a fibonacci number or not. You are allowed to
+define additional functions to help you.
+*)
+
+fun fib(n) = if n<=0 then 0 else if n=1 then 1 else fib(n−1) + fib(n−2)
+
+fun is_fib(x) = let
+            fun helper(current, value) =
+              if fib(current) < value then helper(current + 1, value)
+                else if fib(current = value) then true else false;
+    in
+              helper(0,x)
+    end;
+
+(*
+Ariel, the Little Mermaid, was asked by Ursula to give all her beautiful colored pearls in 25pt
+exchange for getting transformed into a real girl. Ariel wanted very much to meet prince
+Eric in person, but wouldn’t give away all her pearls, so she made a deal with Ursula: she
+were to keep the k most shiny pearls and give away all the others.
+We know that Ariel’s pearls were of four types: the carved pearls are not shiny at all
+and have a “shininess” multiplier of 0; opal-pearls have a multiplier of 2; the faceted pearls
+have a multiplier of 4; the akoya pearls have the highest multiplier, namely 10. Each pearl
+also has an intrinsic “shininess” that gets multiplied by the multiplier.
+You are given the following SML datatype and function signature and you are asked to
+return the total value of the “shininess” that Ariel can get:
+
+datatype pearl = carved of int | opal of int | faceted of int | akoya of int;
+val shiny = fn : pearl list ∗ int −> int;
+For instance to compute
+− shiny([carved(2), opal(3), faceted(1), faceted(5), akoya(2), opal(20)], 3);
+val it = 80 : int;
+we first compute the shininess of the five pearls: [0,6,4,20,20,40], and then add up the
+shininess of the k = 3 shiniest ones
+*)
+
+fun len([]) = 0 | len (x::L) = 1+len(L);
+
+fun take(L, 0) = [] | take([], _) = [] | take(x::L, n) = x::take(L,n−1);
+
+fun drop(L, 0) = L | drop([], _) = [] | drop(x::L, n) = drop(L, n−1);
+
+datatype pearl=carved of int | opal of int | faceted of int | akoya of int;
+
+fun value(carved(X)) = 0
+	| value(opal(X)) = 2*X
+	| value(faceted(X)) = 4*X
+	| value(akoya(X)) = 10*X;
+
+fun cmp(A, B) = value(A) > value(B);
+
+fun merge([],p,_) = p
+	| merge(p,[],_) = p
+	| merge(a::p1, b::p2, compare) = if compare(a,b) then a::merge(p1,b::p2,compare) else b::merge(a::p1,p2,compare);
+
+fun sort([], _) = []
+	| sort([a], _) = [a]
+	| sort(L,cmp) = let val l1 = len(L) val p1 = sort(take(L,l1 div 2),cmp) val p2 = sort(drop(L,l1 div 2),cmp)
+					in merge(p1,p2,cmp) 
+					end;
+
+fun sum([]) = 0
+	| sum(a::L) = value(a) + sum(L);
+
+fun shiny(X,k) = sum(take(sort(X,cmp),k));
+
+(*
+ALTERNATIVE FOR SHINY:
+
+fun shiny(X,k) = foldl op+ 0 (take(intsort(map value X),k));
+*)
+
+(*
+Second option:
+datatype pearl=carved of int | opal of int | faceted of int | akoya of int;
+
+fun value(carved(X)) = 0
+	| value(opal(X)) = 2*X
+	| value(faceted(X)) = 4*X
+	| value(akoya(X)) = 10*X;
+
+fun max(a, b) = if a>b then a else b;
+
+fun shiny([], _) = 0
+	| shiny(_, 0) = 0
+	| shiny(a::L, k) = max( value(a)+shiny(L,k−1), shiny(L,k) );
+*)
+
+(*
+In music theory, notes are divided into groups of 12 semitones. Those groups are called 20pt
+octaves. In each octave, we have the familiar 7 note classes - A, B, C, D, E, F and
+G (ordered from lowest to highest). In order to denote all 12 semitones, we use the
+special symbols operators: sharp (#) and flat (@), which mean 1 semitone higher and lower,
+respectively. Now we only need to know the number of semitones between those classes:
+
+A to B : 2 semitones 	B to C : 1 semitone
+C to D : 2 semitones 	D to E : 2 semitones
+E to F : 1 semitone 	F to G : 2 semitones
+G to A : 2 semitones 		   :
+
+This leads to many different representations of the same note. For example, C = #B =
+@@D = #@C
+For a computer program, representing each note with a unique integer is much more
+convenient. To do that, we number all the notes by increasing pitch: A from octave 0
+becomes 0, #A from octave 0 becomes 1, A from octave 1 becomes 12, B from octave 1
+become 14, etc.
+You are given an SML datatype for notes:
+datatype noteclass = A | B | C | D | E | F | G |
+	| sharp of noteclass
+	| flat of noteclass;
+
+datatype note = note of int * noteclass;  -> octave number and note class 
+
+Write an SML function that converts a list of notes from the datatype to the integer
+representation described above. Example and signature:
+
+val convert = fn : note list −> int list
+− convert([note(0,sharp(A)), note(1,flat(flat(B)))]);
+val it = [1,12] : int list
+*)
+
+fun toneval(note(x,A)) = x*12
+	| toneval(note(x,B)) = x*12+2
+	| toneval(note(x,C)) = x*12+3
+	| toneval(note(x,D)) = x*12+5
+	| toneval(note(x,E)) = x*12+7
+	| toneval(note(x,F)) = x*12+8
+	| toneval(note(x,G)) = x12+10
+	| toneval(note(x,sharp(n))) = toneval(note(x,n)) + 1
+	| toneval(note(x,flat(n))) = toneval(note(x,n)) − 1;
+
+fmiun convert(ls) = map toneval ls;
+
+(*
+Your new favorite game is Angry Birds, and, after a lazy afternoon when you have played 25pt
+the game, you observed the following rules for deducing the score:
+the red bird will always add 5000 points to your score (no matter what it hits)
+• the blue bird always is split into 3 smaller birds, and every bird adds 1000 points if
+it hits an object
+• the yellow bird will add 2500 birds only if it hits a green pig
+• the white bird is considered peaceful and will add no points to your score
+Your version of Angry Birds permits you to choose K from a list of birds which you
+will fire. Therefore, you design the following SML datatype:
+
+datatype angrybird = white | red | blue of int | yellow of bool;
+
+The int parameter of the blue bird tells you how many birds hit an object, and the bool
+parameter of the yellow bird tells you if the bird hits a pig or not.
+You are required to write an SML function getScore which takes a list of Angry Birds
+and the number K of birds you can fire and returns the maximum score you can get by
+firing your choice of K birds:
+
+val getScore = fn : angrybird list * int −> int;
+− getScore( [white, white, red, blue(3)], 3 );
+val it = 8000 : int; (∗ red, blue and one of the whites are chosen ∗)
+− getScore( [red, yellow(false), yellow(true), blue(2)], 2);
+val it = 7500 : int; (∗ red and yellow(true) are chosen ∗)
+
+*)
+
+datatype angrybird = white | red | blue of int | yellow of bool;
+
+fun convert(white) = 0
+	| convert(red) = 5000
+	| convert(blue(x)) = x*1000
+	| convert(yellow(x)) = if x then 2500 else 0;
+
+fun getScore(l,k)= let 
+	val l1 = map convert l
+	val l2 = ListMergeSort.sort (op<) l1
+	in foldl (op+) 0 (List.take(l2, k))
+	end;
+
+(*
+Write a function that takes a list of real numbers and returns the second maximum 20pt
+element of the list and raise an exception if there is no such element. For example,
+max([1.0, 4.4, 4.5, 6.2, 2.3, 2.2, 2.2]) should return 4.5
+*)
+
+exception WrongInput;
+
+fun selmax(nil: real list) = nil
+	| selmax(a::nil) = a::nil
+	| selmax(a::b::t) = if a>b then b::selmax(a::t) else a::selmax(b::t);
+
+fun remlast(nil) = raise WrongInput
+	| remlast(l) = rev(tl(rev(l)));
+
+fun max(nil) = raise WrongInput
+	| max(h::nil) = raise WrongInput
+	| max(l) = hd(rev(selmax(remlast(selmax(l)))));
+
+(*
+Your task is to implement a function that works similarly to the grep functionality in Linux. 30pt
+The input contains three strings: a pattern string, an input file name, and an output file
+name. You have to implement a function grep(pattern,infile,outfile), which writes to the
+output file those lines from the input file, which contain the pattern string.
+For example: Given pattern substring:we have
+
+input 								output
+This line contains a substring. 	This line contains a substring.
+This line contains strings. 	Strings contain substrings.
+Strings contain substrings.
+Substrings are strings.
+
+*)
+fun readFile(filename) =
+	let
+		val fin = TextIO.openIn(filename)
+		fun read() =
+			let
+				val x = TextIO.inputLine(fin)
+			in
+				if x = NONE then [] else (valOf x) :: read()
+			end
+	in
+		read()
+	end;
+
+fun writeFile(filename,data) =
+	let
+		val fout = TextIO.openOut(filename)
+		fun write([]) = (TextIO.flushOut(fout); true)
+			| write(l::ls) = (TextIO.output(fout,l); write(ls))
+	in
+		write(data)
+	end;
+
+fun grepList(_,nil) = nil
+	| grepList(pattern,l::ls) = if (String.isSubstring pattern l)
+		then l::grepList(pattern,ls)
+		else grepList(pattern,ls);
+
+fun grep(pattern,infile,outfile) = writeFile(outfile,grepList(pattern,readFile(infile)));
+
+(*
+Write an SML function prefix_code that tests whether a code is a prefix code. The code 20pt
+is given as a list of pairs (SML type char∗string list).
+Example:
+
+prefix_code [(#"a","0"), (#"b","1")];
+val it = true : bool
+*)
+
+Solution:
+infix mem (* list membership *)
+
+fun x mem nil = false | x mem (y::l) = (x=y) orelse (x mem l)
+
+(* test for repeated elements in list *)
+fun repeat nil = false
+	| repeat (h::t) = h mem t orelse repeat(t)
+
+fun function rel = not (repeat (map (fn (x,_) => x ) rel))
+
+fun injective rel = not (repeat (map (fn (_,x) => x ) rel))
+(*test whether a list is a prefix of another *)
+
+fun prefix_list _ nil = false
+	| prefix_list nil _ = true
+	| prefix_list (h::t) (k::l) = if (h = k) then prefix_list t l else false;
+
+(*testing if there is an element with property p in list *)
+fun exists p nil = false | exists p (h::t) = p h orelse exists p t;
+
+(*testing for the prefix property *)
+fun prefix_prop code =
+	exists (fn (_,c) =>
+		exists (fn (_,d) =>
+			prefix_list (explode c) (explode d))
+			code)
+		code;
+
+fun prefix_code code = function code
+	andalso injective code
+	andalso prefix_prop code = false;
+
+(*Test cases:*)
+val test1 = prefix_code [(#"a","0"), (#"b","10")] = true;
+val test2 = prefix_code [(#"a","0"), (#"b","1")] = true;
+val test3 = prefix_code [(#"a","0"), (#"b","10"), (#"c", "110")]=true;
+val test4 = prefix_code [(#"a","0"), (#"a","10")]=false;
+val test5 = prefix_code [(#"a", "0"), (#"b", "01")]=false;
+

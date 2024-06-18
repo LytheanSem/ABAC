@@ -1,0 +1,99 @@
+
+fun fib(n) = if n = 0 then 1 else
+             if n = 1 then 1 else
+             fib(n-1) + fib(n-2)
+
+fun explode(s) =
+  if s = "" then []
+  else String.sub(s,0)::
+       (explode(String.substring(s,1,String.size(s)-1)))
+
+fun reverse(L) =
+  if null L then []
+  else append(reverse(tl(L)),[hd(L)])
+
+fun reverse([]) = []
+  | reverse(h::t) = reverse(t)@[h]
+
+fun maxIntList nil' = valOf(Int.minInt)
+  | maxIntList (cons(x,xs)) = Int.max(x,maxIntList xs)
+
+fun reverse(L) =
+    let fun helprev (nil, acc) = acc
+          | helprev (h::t, acc) = helprev(t,h::acc)
+    in
+      helprev(L,[])
+    end
+
+- fun curry f x y = f(x,y)
+val curry = fn : ('a * 'b -> 'c) -> 'a -> 'b -> 'c
+
+- fun uncurry f (x,y) = f x y
+val uncurry = fn : ('a -> 'b -> 'c) -> 'a * 'b -> 'c
+
+- map (map add1);
+val it = fn : int list list -> int list list
+
+- fun double x = 2 * x;
+val double = fn : int -> int
+- val flist = (map map) [add1,double];
+val flist = [fn,fn] : (int list -> int list) list
+- construction flist [1,2,3];
+val it = [[2,3,4],[2,4,6]] : int list list
+
+- foldr op :: nil [1,2,3];
+val it = [1,2,3] : int list
+- foldr op @ nil [[1],[2,3],[4,5]];
+val it = [1,2,3,4,5] : int list
+
+- List.filter (fn x => x mod 7 = 0) [2,3,7,14,21,25,28];
+val it = [7,14,21,28] : int list
+- List.filter (fn x => x > 10 orelse x = 0)
+          [10, 11, 0, 5, 16, 8];
+val it = [11,0,16] : int list
+
+cpslen [1,2,3] (fn v => v)
+= cpslen [2,3] (fn w => ((fn v => v) (1 + w)))
+= cpslen [3]
+       (fn x => ((fn w => ((fn v => v) (1 + w)))(1 + x)))
+= cpslen []
+       (fn y => ((fn x => ((fn w => ((fn v => v)
+       (1 + w)))(1 + x)))(1 + y)))
+= (fn y => ((fn x => ((fn w => ((fn v => v)
+       (1 + w)))(1 + x)))(1 + y))) 0
+= (fn x => ((fn w => ((fn v => v) (1 + w)))(1 + x))) 1
+= (fn w => ((fn v => v) (1 + w))) 2
+= (fn v => v) 3
+= 3
+
+fun card (Set L) = List.length L;
+
+fun intersect (Set L1) S2 =
+      Set ((List.filter (fn x => member x S2) L1));
+
+datatype bintree = termnode of int
+       | binnode of int * bintree * bintree;
+
+val tree = (binnode(5,binnode(3,termnode(4),binnode(8,
+            termnode(5),termnode(4))), termnode(4)));
+
+fun depth (termnode _) = 0
+  | depth (binnode(_,t1,t2)) = Int.max(depth(t1),depth(t2))+1
+
+fun cpsdepth (termnode _) k = k 0
+  | cpsdepth (binnode(_,t1,t2)) k =
+       Int.max(cpsdepth t1 (fn v => (k (1 + v))),
+               cpsdepth t2 (fn v => (k (1 + v))));
+
+fun reverse (value: string): string =
+  let
+    fun shovel ([], rs) = rs
+      | shovel (x :: xs, rs) = shovel (xs, x :: rs)
+    fun list_reverse xs = shovel (xs, [])
+  in
+    String.implode (list_reverse (String.explode value))
+  end;
+
+
+
+
