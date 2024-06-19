@@ -1,0 +1,1485 @@
+Data Structure and Algorithm
+
++ Binary Search
+import time
+
+K = int(input())
+a = list(map(int, input().split()))
+
+st = time.process_time()
+
+a.sort()
+
+def BinSrch(key, p, r):
+    while p <= r:
+        q = (p+r)//2
+        if a[q] == key:
+            return True, q
+        elif key < a[q]:
+            r = q-1
+        else:
+            p = q+1
+    return False, -1
+    
+
+found = False
+for x in a:
+    y = K/x
+    found, j = BinSrch(y, 0, len(a)-1)
+    if found:
+        break
+
+et = time.process_time()
+
+if not found:
+    print('No pair multiplies to k')
+else:
+    print(x,int(y))
+
+print(et-st)
+--------------------------------------------------------------
++ Loop
+
+K = int(input())
+a = list(map(int, input().split()))
+
+import time
+
+st = time.process_time()
+
+found = False
+for x in a:
+    y = K/x
+    if y != x:
+        for z in a:
+            if z == y:
+                found = True
+                break
+    if found:
+        break
+
+et = time.process_time()
+
+if not found:
+    print("no pair exists")
+else:
+    print(x, int(y))
+print("running time:", et-st)
+
+-----------------------------------------------------------
++ Naive
+
+K = int(input())
+a = list(map(int, input().split()))
+
+import time
+
+st = time.process_time()
+
+found = False
+for i in range(len(a)):
+    for j in range(len(a)):
+        if i != j and a[i]*a[j] == K:
+            found = True
+            break
+    if found:
+        break
+
+et = time.process_time()
+
+if not found:
+    print("no pair exists")
+else:
+    print(a[i], a[j])
+print("running time:", et-st)
+
+-----------------------------------------------------------------
++ List 
+
+K = int(input())
+a = list(map(int, input().split()))
+
+import time
+
+st = time.process_time()
+
+found = False
+for x in a:
+    y = K/x
+    if y != x and y in a:
+        found = True
+        break
+
+et = time.process_time()
+
+if not found:
+    print("no pair exists")
+else:
+    print(x, int(y))
+print("running time:", et-st)
+
+-------------------------------------------------------------------
++ inssort
+
+import time
+
+a = list(map(int, input().split()))
+
+n = len(a)
+
+# st = time.process_time()
+
+
+def InsertionSort(a):
+
+    # traversing the array from 1 to length of the array(a)
+    for i in range(1, n):
+
+        temp = a[i]
+
+        # Shift elements of array[0 to i-1], that are
+        # greater than temp, to one position ahead
+        # of their current position
+        j = i-1
+        while j >= 0 and temp < a[j]:
+            a[j+1] = a[j]
+            j -= 1
+        a[j+1] = temp
+
+
+st = time.process_time()
+InsertionSort(a)
+et = time.process_time()
+print(et-st)
+---------------------------------------------------------------
++merge sort1
+
+import time
+
+
+def merge(A, p, q, r):
+    B = []
+    i = p
+    j = q+1
+    while i <= q and j <= r:
+        if A[i] <= A[j]:
+            B.append(A[i])
+            i += 1
+        else:
+            B.append(A[j])
+            j += 1
+    A[p:r+1] = B + A[i:q+1] + A[j:r+1]
+
+
+def mergesort(a, p, r):
+    if p < r:
+
+        # Same as (l+r)//2, but avoids overflow for
+        # large l and h
+        m = p+(r-p)//2
+
+        # Sort first and second halves
+        mergesort(a, p, m)
+        mergesort(a, m+1, r)
+        merge(a, p, m, r)
+
+
+a = list(map(int, input().split()))
+
+
+st = time.process_time()
+
+mergesort(a, 0, len(a)-1)
+
+et = time.process_time()
+
+print(a)
+print(et-st)
+---------------------------------------------------------------------
++ merge sort 2
+
+import time
+
+
+def merge(a, l, m, r):
+    n1 = m - l + 1
+    n2 = r - m
+
+    # create temp arrays
+    L = [0] * (n1)
+    R = [0] * (n2)
+
+    # Copy data to temp arrays L[] and R[]
+    for i in range(0, n1):
+        L[i] = a[l + i]
+
+    for j in range(0, n2):
+        R[j] = a[m + 1 + j]
+
+    # Merge the temp arrays back into arr[l..r]
+    i = 0     # Initial index of first subarray
+    j = 0     # Initial index of second subarray
+    k = l     # Initial index of merged subarray
+
+    while i < n1 and j < n2:
+        if L[i] <= R[j]:
+            a[k] = L[i]
+            i += 1
+        else:
+            a[k] = R[j]
+            j += 1
+        k += 1
+
+    # Copy the remaining elements of L[], if there
+    # are any
+    while i < n1:
+        a[k] = L[i]
+        i += 1
+        k += 1
+
+    # Copy the remaining elements of R[], if there
+    # are any
+    while j < n2:
+        a[k] = R[j]
+        j += 1
+        k += 1
+
+# l is for left index and r is right index of the
+# sub-array of arr to be sorted
+
+
+def mergesort(a, l, r):
+    if l < r:
+
+        # Same as (l+r)//2, but avoids overflow for
+        # large l and h
+        m = l+(r-l)//2
+
+        # Sort first and second halves
+        mergesort(a, l, m)
+        mergesort(a, m+1, r)
+        merge(a, l, m, r)
+
+
+a = list(map(int, input().split()))
+
+
+st = time.process_time()
+
+mergesort(a, 0, len(a)-1)
+
+et = time.process_time()
+
+print(a)
+print(et-st)
+--------------------------------------------------------
++ heap
+'''
+Python 3
+A explicit comparing function is required for custom priority definition
+The compare function takes two items:
+  - returns True if the first item has higher priority than the second
+  - returns False otherwise
+The function is to be passed to the heap instantiation
+'''
+
+
+class heap:
+    def compare(x, y):  # a default compare function for min heap
+        return x < y
+
+    def empty(self):
+        if self.heapsize == 0:
+            return True
+        else:
+            return False
+
+    def heapify(self, i):
+        l = i*2+1
+        r = (i+1)*2
+        if l < self.heapsize and self.cmp(self.a[l], self.a[i]):
+            largest = l
+        else:
+            largest = i
+        if r < self.heapsize and self.cmp(self.a[r], self.a[largest]):
+            largest = r
+        if largest != i:
+            self.a[i], self.a[largest] = self.a[largest], self.a[i]
+            self.heapify(largest)
+
+    def insert(self, x):
+        self.heapsize += 1
+        if len(self.a) < self.heapsize:
+            self.a.append(x)
+        else:
+            self.a[self.heapsize-1] = x
+        i = self.heapsize-1
+        j = (i-1)//2
+        while i > 0 and self.cmp(self.a[i], self.a[j]):
+            self.a[i], self.a[j] = self.a[j], self.a[i]
+            i = j
+            j = (i-1)//2
+
+    def extract(self):
+        x = self.a[0]
+        last = self.heapsize-1
+        self.a[0], self.a[last] = self.a[last], self.a[0]
+        self.heapsize -= 1
+        self.heapify(0)
+        return x
+
+    def buildHeap(self):
+        for i in range((self.heapsize-1)//2, -1, -1):
+            self.heapify(i)
+
+    def __init__(self, items=[], cmp=compare):
+        self.a = items
+        self.cmp = cmp
+        self.heapsize = len(self.a)
+        if len(self.a) > 0:
+            self.buildHeap()
+
+
+'''
+# Example class definition for heap's element and test code
+
+def myCompare(x, y):   # max heap
+    return x.key > y.key
+
+class myClass:
+    def __init__(self, k):
+        self.key = k
+
+
+testList = [i+100 for i in range(10)]
+
+pq1 = heap(items=testList)   # default as min heap for a list of numbers
+pq2 = heap(cmp=myCompare)  # custom class item with custom compare function
+
+for v in testList:
+    pq2.insert(myClass(v))
+
+while not pq1.empty():
+    print(pq1.extract(), end=' ')
+print()
+
+while not pq2.empty():
+    print(pq2.extract().key, end=' ')
+
+'''
+-----------------------------------------------------------------------
++ selectionSort
+import time
+
+A = list(map(int, input().split()))
+
+n = len(A)
+
+
+def checkoutMax(a, lastIndex=0):
+    # Locate the position of max item
+    # Replace the item at max position with the last item
+    # Return value of max item
+
+    maxIndex = 0
+    for i in range(1, lastIndex+1):
+        if a[i] > a[maxIndex]:
+            maxIndex = i
+    maxItem = a[maxIndex]
+    a[maxIndex] = a[lastIndex]
+    return maxItem
+
+
+st = time.process_time()
+for i in range(n-1, -1, -1):
+    A[i] = checkoutMax(A, i)
+
+print(A)
+et = time.process_time()
+print(f"Time running: {et-st}")
+-------------------------------------------------------------------
++ heap sort
+
+import time
+from Heap import heap
+
+
+A = list(map(int, input().split()))
+
+n = len(A)
+
+
+def findMax(x, y):
+    return x > y
+
+
+def checkoutMax(a, lastIndex=0):
+    # Locate the position of max item
+    # Replace the item at max position with the last item
+    # Return value of max item
+
+    global h
+
+    maxItem = h.extract()
+    '''
+    maxIndex = 0
+    for i in range(1, lastIndex+1):
+        if a[i] > a[maxIndex]:
+            maxIndex = i
+    maxItem = a[maxIndex]
+    a[maxIndex] = a[lastIndex]
+    '''
+    return maxItem
+
+
+st = time.process_time()
+
+h = heap(A, findMax)
+for i in range(n-1, -1, -1):
+    A[i] = checkoutMax(A, i)
+
+print(A)
+et = time.process_time()
+print(f"Time running: {et-st}")
+----------------------------------------------------------------------
++ heap rope
+import time
+
+
+def heapify(arr, n, i):
+    smallest = i
+    left = 2 * i + 1
+    right = 2 * i + 2
+
+    if left < n and arr[left] < arr[smallest]:
+        smallest = left
+
+    if right < n and arr[right] < arr[smallest]:
+        smallest = right
+
+    if smallest != i:
+        arr[i], arr[smallest] = arr[smallest], arr[i]
+        heapify(arr, n, smallest)
+
+
+def build_heap(arr):
+    n = len(arr)
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(arr, n, i)
+
+
+def connect_ropes(ropes):
+
+    build_heap(ropes)
+
+    cost = 0
+
+    while len(ropes) > 1:
+
+        smallest1 = ropes[0]
+        ropes[0] = ropes[-1]
+        ropes.pop()
+        heapify(ropes, len(ropes), 0)
+
+        smallest2 = ropes[0]
+        ropes[0] = ropes[-1]
+        ropes.pop()
+        heapify(ropes, len(ropes), 0)
+
+        new_rope = smallest1 + smallest2
+
+        cost += new_rope
+
+        ropes.append(new_rope)
+        heapify(ropes, len(ropes), len(ropes) - 1)
+
+    return cost
+
+
+ropes = list(map(int, input().split()))
+st = time.process_time()
+minimum_cost = connect_ropes(ropes)
+et = time.process_time()
+print("Minimum cost to connect the ropes:", minimum_cost)
+print(f"time: {et-st}")
+-----------------------------------------------------
++ partition
+
+
+def partition(A, p, r):  # Lomuto's partition scheme
+    x = A[r] # = 10
+    i = p-1 # i = -1
+    for j in range(p, r):
+        # j = 3
+        if A[j] <= x:
+            i += 1 # i = 3
+            A[i],A[j] = A[j],A[i]
+    A[r],A[i+1] = A[i+1],A[r]
+    return i+1 
+
+def quicksort(A, p, r):
+    if p < r:
+        q = partition(A, p, r)
+        quicksort(A, p, q-1)
+        quicksort(A, q+1, r)
+
+a = list(map(int, input().split()))
+quicksort(a, 0, len(a)-1)
+---------------------------------------------------------------
+//random test case continue from partition
+import sys
+
+n = int(sys.argv[1])
+
+# quicksort worst-case gen
+
+import random
+
+k = 0
+while k < n:
+    i = random.randint(0, 4*n)-2*n
+    p = random.randint(0,10000)/10000
+    if p <= 0.25:
+        print(i, end=' ')
+        k += 1
+-------------------------------------------------------------------------
++ hash 
+from sys import stdin
+
+# Read the sequence of operations to be operated on the hash table
+operations = []
+for line in stdin:
+    line = line.split()
+    if len(line) > 2:
+        line[2] = int(line[2])
+    operations.append(line)
+
+
+table_size = 10    # set table size here
+hash_table = [[] for _ in range(table_size)]
+
+
+def show_hash_table():
+    print('-------------------')
+    for item_list in hash_table:
+        print(item_list)
+    print('-------------------')
+
+
+def hash_func(s):
+    # return the hash value
+    hash_value = sum(ord(c) for c in s) % table_size
+    return hash_value
+
+
+def insert(s, v):
+    hash_value = hash_func(s)
+    item_list = hash_table[hash_value]
+    for item in item_list:
+        if item[0] == s:
+            return -1  # Key already exists, return -1
+    item_list.append((s, v))
+    return 0  # Successful insertion, return 0
+
+
+def search(s):
+    hash_value = hash_func(s)
+    item_list = hash_table[hash_value]
+    for item in item_list:
+        if item[0] == s:
+            return item[1]  # Key found, return value
+    return -1  # Key not found, return -1
+
+
+# def delete(s):
+#     hash_value = hash_func(s)
+#     item_list = hash_table[hash_value]
+#     for i, item in enumerate(item_list):
+#         if item[0] == s:
+#             del item_list[i]  # Delete the item
+#             return 0  # Successful deletion, return 0
+#     return -1  # Key not found, return -1
+
+def delete(s):
+    hash_value = hash_func(s)
+    item_list = hash_table[hash_value]
+    for item in range(len(item_list)):
+        if item_list[item][0] == s:
+            del item_list[item]  # Delete the item
+            return 0  # Successful deletion, return 0
+    return -1  # Key not found, return -1
+
+
+# The main program to execute the sequence of operations
+for op in operations:
+    if op[0] == "insert":
+        result = insert(op[1], op[2])
+        if result == 0:
+            print("Successfully inserted:", op[1])
+        else:
+            print("Key already exists:", op[1])
+    elif op[0] == "search":
+        result = search(op[1])
+        if result != -1:
+            print("Value found:", result)
+        else:
+            print("Key not found:", op[1])
+    elif op[0] == "delete":
+        result = delete(op[1])
+        if result == 0:
+            print("Successfully deleted:", op[1])
+        else:
+            print("Key not found:", op[1])
+-----------------------------------------------------------------------------------
++ binary tree
+
+import sys
+sys.setrecursionlimit(10001)
+
+root = None
+        
+
+class node:
+    def __init__(self, key, data):
+        self.key = key
+        self.data = data
+        self.p = None
+        self.left = None
+        self.right = None
+
+
+def Inorder_Tree_Walk(x):
+    if x != None:
+        Inorder_Tree_Walk(x.left)
+        print(x.key)
+        Inorder_Tree_Walk(x.right)
+
+
+def Tree_Minimum(x):
+    while x.left != None:
+        x = x.left
+    return x
+
+
+def Tree_Maximum(x):
+    while x.right != None:
+        x = x.right
+    return x
+    
+
+def Tree_Successor(x):
+    if x.right != None:
+        return Tree_Minimum(x.right)
+    y = x.p
+    while y != None & x == y.right:
+        x = y
+        y = y.p
+    return y
+
+'''
+Adding your own Tree_Predecessor(x) is recommended, but not required
+'''
+
+def Transplant(T, u, v):
+    if u.p == None:
+        T.root = v 
+    elif u == u.p.left:
+        u.p.left = v
+    else:
+        u.p.right = v
+    if v != None:
+        v.p = u.p
+
+def Tree_Delete(T,z):
+    if z.left == None:
+        Transplant(T,z,z.right)
+    elif z.right == None:
+        Transplant(T,z,z.right)
+    else:
+        y = Tree_Minimum(z.right)
+        if y.p != z:
+            Transplant(T,y,y.right)
+            y.right = z.right
+            y.right.p = y
+        Transplant(T,z,y)
+        y.left = z.left
+        z.left.p = y
+        
+
+def Tree_Search(x,k):
+    global root
+
+    if x == None or k == x.key:
+        return x
+    if k < x.key:
+        return Tree_Search(x.left, k)
+    else:
+        return Tree_Search(x.right, k)
+    
+    
+    
+
+def Tree_Insert(z):
+    global root
+    
+    y = None
+    x = root
+    while x != None:
+        y = x
+        if z.key < x.key:
+             x = x.left
+        else:
+            x = x.right
+    z.p = y
+    if y == None:
+        root = z
+    elif z.key < y.key:
+        y.left = z
+    else: 
+        y.right = z
+        
+        
+    
+
+# Function to print
+def printCall ( node , indent , last ) :
+    if node != None :
+        print(indent, end=' ')
+        if last :
+            print ("R----",end= ' ')
+            indent += "     "
+        else :
+            print("L----",end=' ')
+            indent += "|    "
+
+        print ( str ( node.key ) )
+        printCall ( node.left , indent , False )
+        printCall ( node.right , indent , True )
+
+# Function to call print
+def print_BSTree (root) :
+    printCall( root , "" , True )
+    
+    
+    
+node1 = node(5, "Data for key 5")
+node2 = node(3, "Data for key 3")
+node3 = node(8, "Data for key 8")
+node4 = node(2, "Data for key 2")
+node5 = node(4, "Data for key 4")
+node6 = node(7, "Data for key 7")
+node7 = node(9, "Data for key 9")
+
+Tree_Insert(node1)
+Tree_Insert(node2)
+Tree_Insert(node3)
+Tree_Insert(node4)
+Tree_Insert(node5)
+Tree_Insert(node6)
+Tree_Insert(node7)
+
+print_BSTree(root)
+
+#Print the binary search tree to verify the insertion
+print_BSTree(root)
+print("Deleting node with key 3...")
+Tree_Delete(root, node2)
+print("Binary Search Tree after deletion:")
+print_BSTree(root)
+
+#Test the Tree_Delete function by deleting another node
+print("Deleting node with key 7...")
+Tree_Delete(root, node6)
+print("Binary Search Tree after deletion:")
+print_BSTree(root)
+-------------------------------------------------------------------
++ binary tree 2
+import sys
+sys.setrecursionlimit(10001)
+
+
+class BinaryTree:
+    def __init__(self):
+        self.root = None
+
+    class Node:
+        def __init__(self, key, data):
+            self.key = key
+            self.data = data
+            self.left = None
+            self.right = None
+
+    def Inorder_Tree_Walk(self, x):
+        if x is not None:
+            self.Inorder_Tree_Walk(x.left)
+            print(x.key)
+            self.Inorder_Tree_Walk(x.right)
+
+    def Tree_Minimum(self, x):
+        while x.left is not None:
+            x = x.left
+        return x
+
+    def Tree_Maximum(self, x):
+        while x.right is not None:
+            x = x.right
+        return x
+
+    def Tree_Successor(self, x):
+        if x.right is not None:
+            return self.Tree_Minimum(x.right)
+
+        y = x.p
+        while y is not None and x == y.right:
+            x = y
+            y = y.p
+        return y
+
+    def Transplant(self, u, v):
+        if u.p is None:
+            self.root = v
+        elif u == u.p.left:
+            u.p.left = v
+        else:
+            u.p.right = v
+
+        if v is not None:
+            v.p = u.p
+
+    def Tree_Delete(self, z):
+        if z.left is None:
+            self.Transplant(z, z.right)
+        elif z.right is None:
+            self.Transplant(z, z.left)
+        else:
+            y = self.Tree_Minimum(z.right)
+            if y.p != z:
+                self.Transplant(y, y.right)
+                y.right = z.right
+                y.right.p = y
+            self.Transplant(z, y)
+            y.left = z.left
+            y.left.p = y
+
+    def Tree_Search(self, x, k):
+        if x is None or x.key == k:
+            return x
+
+        result = self.Tree_Search(x.left, k)
+        if result is not None:
+            return result
+
+        return self.Tree_Search(x.right, k)
+
+    def Tree_Insert(self, z):
+        if self.root is None:
+            self.root = z
+        else:
+            q = [self.root]
+
+            while q:
+                node = q.pop(0)
+                if node.left is None:
+                    node.left = z
+                    z.p = node
+                    break
+                elif node.right is None:
+                    node.right = z
+                    z.p = node
+                    break
+                else:
+                    q.append(node.left)
+                    q.append(node.right)
+
+    # Function to print
+    def printCall(self, node, indent, last):
+        if node is not None:
+            print(indent, end=' ')
+            if last:
+                print("R----", end=' ')
+                indent += "     "
+            else:
+                print("L----", end=' ')
+                indent += "|    "
+
+            print(str(node.key))
+            self.printCall(node.left, indent, False)
+            self.printCall(node.right, indent, True)
+
+    # Function to call print
+    def print_BSTree(self):
+        self.printCall(self.root, "", True)
+
+
+# Example usage for two binary trees
+if __name__ == "__main__":
+    # Create two instances of BinaryTree
+    tree1 = BinaryTree()
+    tree2 = BinaryTree()
+    tree3 = BinaryTree()
+
+    # Create nodes and insert them into the first tree
+    node1 = tree1.Node(5, "Data for key 5")
+    node2 = tree1.Node(3, "Data for key 3")
+    node3 = tree1.Node(8, "Data for key 8")
+    tree1.Tree_Insert(node1)
+    tree1.Tree_Insert(node2)
+    tree1.Tree_Insert(node3)
+
+    # Create nodes and insert them into the second tree
+    node4 = tree2.Node(10, "Data for key 10")
+    node5 = tree2.Node(7, "Data for key 7")
+    node6 = tree2.Node(12, "Data for key 12")
+    tree2.Tree_Insert(node4)
+    tree2.Tree_Insert(node5)
+    tree2.Tree_Insert(node6)
+
+    # Print both trees
+    print("Binary Tree 1:")
+    tree1.print_BSTree()
+
+    print("\nBinary Tree 2:")
+    tree2.print_BSTree()
+
+    node7 = tree3.Node(15, "Data for key 15")
+    node8 = tree3.Node(13, "Data for key 13")
+    node9 = tree3.Node(17, "data for key 17")
+    tree3.Tree_Insert(node7)
+    tree3.Tree_Insert(node8)
+    tree3.Tree_Insert(node9)
+
+    print("Binary Tree 3:")
+    tree3.print_BSTree()
+
+----------------------------------------------------------------
++ binary search tree
+import sys
+sys.setrecursionlimit(10001)
+
+class BST_Node:
+    def __init__(self, key, data=None):
+        self.key = key
+        self.data = data
+        self.p = None
+        self.left = None
+        self.right = None
+
+class BSTree:
+    def __init__(self):
+        self.root = None
+
+    def Tree_Maximum(self, x):
+        while x.right != None:
+            x = x.right
+        return x
+
+    def Tree_Minimum(self, x):
+        while x.left != None:
+            x = x.left
+        return x
+
+    def Transplant(self, u, v):
+        if u.p == None:
+            self.root = v
+        elif u == u.p.left:
+            u.p.left = v
+        else:
+            u.p.right = v
+        if v != None:
+            v.p = u.p
+
+    def Tree_Delete(self, z):
+        if z.left == None:
+            self.Transplant(z, z.right)
+        elif z.right == None:
+            self.Transplant(z, z.left)
+        else:
+            y = self.Tree_Minimum(z.right)
+            if y.p != z:
+                self.Transplant(y, y.right)
+                y.right = z.right
+                y.right.p = y
+            self.Transplant(z, y)
+            y.left = z.left
+            y.left.p = y
+
+    def Tree_Insert(self, z):
+        y = None
+        x = self.root
+        while x != None:
+            y = x
+            if z.key < x.key:
+                x = x.left
+            else:
+                x = x.right
+        z.p = y
+        if y == None:
+            self.root = z
+        elif z.key < y.key:
+            y.left = z
+        else:
+            y.right = z
+
+    def Tree_Successor(self, x):
+        if x.right != None:
+            return self.Tree_Minimum(x.right)
+        y = x.p
+        while y != None and x == y.right:
+            x = y
+            y = y.p
+        return y
+
+    def Tree_Predecessor(self, x):
+        if x.left != None:
+            return self.Tree_Maximum(x.left)
+        y = x.p
+        while y != None and x == y.left:
+            x = y
+            y = y.p
+        return y
+
+    def Tree_Search(self, k):
+        x = self.root
+        while x != None and k != x.key:
+            if k < x.key:
+                x = x.left
+            else:
+                x = x.right
+        return x
+
+    def Inorder_Tree_Walk(self, x):
+        if x != None:
+            self.Inorder_Tree_Walk(x.left)
+            print(x.key)
+            self.Inorder_Tree_Walk(x.right)
+
+    # Function to print
+    def __printCall ( self , node , indent , last ) :
+        if node != None :
+            print(indent, end=' ')
+            if last :
+                print ("R----",end= ' ')
+                indent += "     "
+            else :
+                print("L----",end=' ')
+                indent += "|    "
+
+            print ( str ( node.key ) )
+            self.__printCall ( node.left , indent , False )
+            self.__printCall ( node.right , indent , True )
+
+    # Function to call print
+    def print_BSTree ( self ) :
+        self.__printCall ( self.root , "" , True )
+----------------------------------------------------------------------------------
++ Red-Black Tree
+# Define Node
+class RB_Node():
+    def __init__(self,key, data=None):
+        self.data = data
+        self.key = key                                   # Key of Node
+        self.p = None                                    # Parent of Node
+        self.left = None                                 # Left Child of Node
+        self.right = None                                # Right Child of Node
+        self.color = 1                                   # Red Node as new node is always inserted as Red Node
+
+# Define R-B Tree
+class RBTree():
+    def __init__(self):
+        self.NULL = RB_Node ( 0 )
+        self.NULL.color = 0
+        self.NULL.left = None
+        self.NULL.right = None
+        self.root = self.NULL
+
+
+    # Insert New Key
+    def insert(self, key):
+        node = RB_Node(key)
+        node.p = None
+        node.left = self.NULL
+        node.right = self.NULL
+        node.color = 1                                   # Set root colour as Red
+        self.RB_Insert(node)
+
+    # Insert New Node
+    def RB_Insert(self, node):
+        node.p = None
+        node.left = self.NULL
+        node.right = self.NULL
+        node.color = 1                                   # Set root colour as Red
+        
+        y = None
+        x = self.root
+
+        while x != self.NULL :                           # Find position for new node
+            y = x
+            if node.key < x.key :
+                x = x.left
+            else :
+                x = x.right
+
+        node.p = y                                       # Set p of Node as y
+        if y == None :                                   # If parent i.e, is none then it is root node
+            self.root = node
+        elif node.key < y.key :                          # Check if it is right Node or Left Node by checking the value
+            y.left = node
+        else :
+            y.right = node
+
+        if node.p == None :                              # Root node is always Black
+            node.color = 0
+            return
+
+        if node.p.p == None :                            # If parent of node is Root Node
+            return
+
+        self.fixInsert ( node )                          # Else call for Fix Up
+
+
+    def Tree_Minimum(self, node):
+        while node.left != self.NULL:
+            node = node.left
+        return node
+
+    def Tree_Maximum(self, node):
+        while node.right != self.NULL:
+            node = node.right
+        return node
+
+    # Code for left rotate
+    def LR ( self , x ) :
+        y = x.right                                      # Y = Right child of x
+        x.right = y.left                                 # Change right child of x to left child of y
+        if y.left != self.NULL :
+            y.left.p = x
+
+        y.p = x.p                                        # Change parent of y as parent of x
+        if x.p == None :                                 # If parent of x == None ie. root node
+            self.root = y                                # Set y as root
+        elif x == x.p.left :
+            x.p.left = y
+        else :
+            x.p.right = y
+        y.left = x
+        x.p = y
+
+
+    # Code for right rotate
+    def RR ( self , x ) :
+        y = x.left                                       # Y = Left child of x
+        x.left = y.right                                 # Change left child of x to right child of y
+        if y.right != self.NULL :
+            y.right.p = x
+
+        y.p = x.p                                        # Change parent of y as parent of x
+        if x.p == None :                                 # If x is root node
+            self.root = y                                # Set y as root
+        elif x == x.p.right :
+            x.p.right = y
+        else :
+            x.p.left = y
+        y.right = x
+        x.p = y
+
+
+    # Fix Up Insertion
+    def fixInsert(self, k):
+        while k.p.color == 1:                            # While parent is red
+            if k.p == k.p.p.right:                       # if parent is right child of its parent
+                u = k.p.p.left                           # Left child of grandparent
+                if u.color == 1:                         # if color of left child of grandparent i.e, uncle node is red
+                    u.color = 0                          # Set both children of grandparent node as black
+                    k.p.color = 0
+                    k.p.p.color = 1                      # Set grandparent node as Red
+                    k = k.p.p                            # Repeat the algo with Parent node to check conflicts
+                else:
+                    if k == k.p.left:                    # If k is left child of it's parent
+                        k = k.p
+                        self.RR(k)                       # Call for right rotation
+                    k.p.color = 0
+                    k.p.p.color = 1
+                    self.LR(k.p.p)
+            else:                                         # if parent is left child of its parent
+                u = k.p.p.right                           # Right child of grandparent
+                if u.color == 1:                          # if color of right child of grandparent i.e, uncle node is red
+                    u.color = 0                           # Set color of childs as black
+                    k.p.color = 0
+                    k.p.p.color = 1                       # set color of grandparent as Red
+                    k = k.p.p                             # Repeat algo on grandparent to remove conflicts
+                else:
+                    if k == k.p.right:                    # if k is right child of its parent
+                        k = k.p
+                        self.LR(k)                        # Call left rotate on parent of k
+                    k.p.color = 0
+                    k.p.p.color = 1
+                    self.RR(k.p.p)                        # Call right rotate on grandparent
+            if k == self.root:                            # If k reaches root then break
+                break
+        self.root.color = 0                               # Set color of root as black
+
+
+    # Function to fix issues after deletion
+    def fixDelete ( self , x ) :
+        while x != self.root and x.color == 0 :           # Repeat until x reaches nodes and color of x is black
+            if x == x.p.left :                            # If x is left child of its parent
+                s = x.p.right                             # Sibling of x
+                if s.color == 1 :                         # if sibling is red
+                    s.color = 0                           # Set its color to black
+                    x.p.color = 1                         # Make its parent red
+                    self.LR ( x.p )                       # Call for left rotate on parent of x
+                    s = x.p.right
+                # If both the child are black
+                if s.left.color == 0 and s.right.color == 0 :
+                    s.color = 1                           # Set color of s as red
+                    x = x.p
+                else :
+                    if s.right.color == 0 :               # If right child of s is black
+                        s.left.color = 0                  # set left child of s as black
+                        s.color = 1                       # set color of s as red
+                        self.RR ( s )                     # call right rotation on x
+                        s = x.p.right
+
+                    s.color = x.p.color
+                    x.p.color = 0                         # Set parent of x as black
+                    s.right.color = 0
+                    self.LR ( x.p )                       # call left rotation on parent of x
+                    x = self.root
+            else :                                        # If x is right child of its parent
+                s = x.p.left                              # Sibling of x
+                if s.color == 1 :                         # if sibling is red
+                    s.color = 0                           # Set its color to black
+                    x.p.color = 1                         # Make its parent red
+                    self.RR ( x.p )                       # Call for right rotate on parent of x
+                    s = x.p.left
+
+                if s.right.color == 0 and s.right.color == 0 :
+                    s.color = 1
+                    x = x.p
+                else :
+                    if s.left.color == 0 :                # If left child of s is black
+                        s.right.color = 0                 # set right child of s as black
+                        s.color = 1
+                        self.LR ( s )                     # call left rotation on x
+                        s = x.p.left
+
+                    s.color = x.p.color
+                    x.p.color = 0
+                    s.left.color = 0
+                    self.RR ( x.p )
+                    x = self.root
+        x.color = 0
+
+
+    # Function to transplant nodes
+    def __rb_transplant ( self , u , v ) :
+        if u.p == None :
+            self.root = v
+        elif u == u.p.left :
+            u.p.left = v
+        else :
+            u.p.right = v
+        v.p = u.p
+
+    # Function to return node containing the given key
+    def Tree_Search( self, k):
+        x = self.root
+        while x != self.NULL and k != x.key:
+            if k < x.key:
+                x = x.left
+            else:
+                x = x.right
+        return x
+
+    # Function to return succesor of x
+    def Tree_Successor(self, x):
+        if x.right != self.NULL:
+            return self.Tree_Minimum(x.right)
+        y = x.p
+        while y != self.NULL and x == y.right:
+            x = y
+            y = y.p
+        return y
+
+    # Function to return succesor of x
+    def Tree_Predecessor(self, x):
+        if x.left != self.NULL:
+            return self.Tree_Maximum(x.left)
+        y = x.p
+        while y != self.NULL and x == y.left:
+            x = y
+            y = y.p
+        return y
+
+    # Function to handle deletion
+    def delete_node_helper ( self , node , key ) :
+        z = self.NULL
+        while node != self.NULL :                          # Search for the node having that value/ key and store it in 'z'
+            if node.key == key :
+                z = node
+
+            if node.key <= key :
+                node = node.right
+            else :
+                node = node.left
+
+        if z == self.NULL :                                # If Kwy is not present then deletion not possible so return
+            print ( "Value not present in Tree !!" )
+            return
+        else:
+            self.RB_Delete(z)
+
+    def RB_Delete( self, z ):
+        y = z
+        y_original_color = y.color                          # Store the color of z- node
+        if z.left == self.NULL :                            # If left child of z is NULL
+            x = z.right                                     # Assign right child of z to x
+            self.__rb_transplant ( z , z.right )            # Transplant Node to be deleted with x
+        elif (z.right == self.NULL) :                       # If right child of z is NULL
+            x = z.left                                      # Assign left child of z to x
+            self.__rb_transplant ( z , z.left )             # Transplant Node to be deleted with x
+        else :                                              # If z has both the child nodes
+            y = self.Tree_Minimum ( z.right )                    # Find minimum of the right sub tree
+            y_original_color = y.color                      # Store color of y
+            x = y.right
+            if y.p == z :                              # If y is child of z
+                x.p = y                                # Set parent of x as y
+            else :
+                self.__rb_transplant ( y , y.right )
+                y.right = z.right
+                y.right.p = y
+
+            self.__rb_transplant ( z , y )
+            y.left = z.left
+            y.left.p = y
+            y.color = z.color
+        if y_original_color == 0 :                          # If color is black then fixing is needed
+            self.fixDelete ( x )
+
+
+    # Deletion of node
+    def delete ( self , key ) :
+        self.delete_node_helper ( self.root , key )         # Call for deletion
+
+
+    # Function to print
+    def __printCall ( self , node , indent , last ) :
+        if node != self.NULL :
+            print(indent, end=' ')
+            if last :
+                print ("R----",end= ' ')
+                indent += "     "
+            else :
+                print("L----",end=' ')
+                indent += "|    "
+
+            s_color = "RED" if node.color == 1 else "BLACK"
+            print ( str ( node.key ) + "(" + s_color + ")" )
+            self.__printCall ( node.left , indent , False )
+            self.__printCall ( node.right , indent , True )
+
+    # Function to call print
+    def print_RBTree ( self ) :
+        self.__printCall ( self.root , "" , True )
+--------------------------------------------------------------
++ test program
+
+# ---- BS Tree -----
+
+
+# from BinarySearchTree import *
+
+# bst = BSTree()
+# # a = [4, 5, 12, -5, -87, 9, 1023]
+
+# import random
+
+# # random.shuffle(a)
+
+# # for k in a:
+# #     x = BST_Node(k)
+# #     bst.Tree_Insert(x)
+    
+# # bst.print_BSTree()
+
+# n = 8000
+# bst2 = BSTree()
+# for k in range(1, n+1):
+#     x = BST_Node(k)
+#     bst2.Tree_Insert(x)
+
+# # bst2.print_BSTree()
+
+
+
+# #to search the resulted Binary Search Tree
+
+# counter  = 0
+# k = 2*n
+# for i in range(n):
+#     v = random.randint(0, k)
+#     x = bst2.Tree_Search(v)
+#     if x != None:
+#         counter += 1
+# print(counter)
+# ---- RB Tree -----
+
+from RedBlackTree import *
+
+rbt = RBTree()
+a = [8,6,4,5,3]
+import random
+random.shuffle(a)
+for k in a:
+    x = RB_Node(k)
+    rbt.RB_Insert(x)
+rbt.print_RBTree()
+k = len(a)//2
+
+# n = 8000
+# for k in range(1, n+1):
+#     x = RB_Node(k)
+#     rbt.RB_Insert(x)
+
+
+
+
+# counter = 0
+# k = 2*n
+# for i in range(n):
+#     v = random.randint(0, k)
+#     x = rbt.Tree_Search(v)
+#     if x != rbt.NULL:
+#         counter += 1
+# print(counter)
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+       
+    
+    
+
+
+
+        
+
+
+
+    
+
+
+
+

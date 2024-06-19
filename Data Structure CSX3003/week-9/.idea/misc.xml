@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="executionMode" value="BINARY" />
+    <option name="pathToExecutable" value="/Library/Frameworks/Python.framework/Versions/3.11/bin/black" />
+    <option name="sdkUUID" value="b999d4b6-a6a1-4e41-8416-643377a29aa5" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (week-9)" project-jdk-type="Python SDK" />
+</project>
