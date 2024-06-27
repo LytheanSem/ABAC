@@ -1,3 +1,6 @@
+import sys
+sys.setrecursionlimit(1000000)
+
 coins = list(map(int, input().split()))
 v = int(input())
 count = 0
